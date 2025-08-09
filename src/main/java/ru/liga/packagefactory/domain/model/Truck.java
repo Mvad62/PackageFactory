@@ -1,0 +1,131 @@
+package main.java.ru.liga.packagefactory.domain.model;
+
+import java.util.ArrayList;
+import java.util.List;
+
+// Truck.java - класс кузова машины
+public class Truck {
+    private final int width;
+    private final int height;
+    private final char[][] grid;
+    private final List<Package> packages;
+    private int usedSpace = 0;
+    private int currentWeight = 0;
+
+    public static final int DEFAULT_WIDTH = 6;
+    public static final int DEFAULT_HEIGHT = 6;
+    public static final int MAX_CAPACITY = DEFAULT_WIDTH * DEFAULT_HEIGHT;
+
+    public Truck() {
+        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    }
+
+    public Truck(int width, int height) {
+        this.width = width;
+        this.height = height;
+        this.grid = new char[height][width];
+        this.packages = new ArrayList<>();
+        initializeGrid();
+    }
+
+    private void initializeGrid() {
+        for (int i = 0; i < height; i++) {
+            for (int j = 0; j < width; j++) {
+                grid[i][j] = ' ';
+            }
+        }
+    }
+
+    public boolean placePackage(Package pkg, int x, int y) {
+        // Проверяем выход за границы грузовика
+        if (x < 0 || y < 0 ||
+                x + pkg.getMaxWidth() > width ||
+                y + pkg.getHeight() > height) {
+            return false;
+        }
+
+        // Проверяем переполнение по площади
+        if (usedSpace + pkg.getWeight() > MAX_CAPACITY) {
+            return false;
+        }
+
+        // Проверяем коллизии
+        if (hasCollision(pkg, x, y)) {
+            return false;
+        }
+
+        // Проверяем устойчивость (центр тяжести и опору)
+        if (!checkStability(pkg, x, y)) {
+            return false;
+        }
+
+        // Размещаем посылку
+        for (int py = 0; py < pkg.getHeight(); py++) {
+            String slice = pkg.getSlice(py);
+            for (int px = 0; px < slice.length(); px++) {
+                if (slice.charAt(px) != ' ') {
+                    grid[y + py][x + px] = slice.charAt(px);
+                }
+            }
+        }
+
+        packages.add(pkg);
+        usedSpace += pkg.getWeight();
+        currentWeight += pkg.getWeight();
+        return true;
+    }
+
+    private boolean hasCollision(Package pkg, int x, int y) {
+        for (int py = 0; py < pkg.getHeight(); py++) {
+            String slice = pkg.getSlice(py);
+            for (int px = 0; px < slice.length(); px++) {
+                if (slice.charAt(px) != ' ' && grid[y + py][x + px] != ' ') {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    private boolean checkStability(Package pkg, int x, int y) {
+        if (y == 0) return true; // На полу - всегда устойчиво
+
+        // Проверяем опору (не менее 50% площади должно иметь поддержку снизу)
+        int supportedBlocks = 0;
+        int totalBlocks = 0;
+
+        for (int py = 0; py < pkg.getHeight(); py++) {
+            String slice = pkg.getSlice(py);
+            for (int px = 0; px < slice.length(); px++) {
+                if (slice.charAt(px) != ' ') {
+                    totalBlocks++;
+                    if (grid[y - 1][x + px] != ' ') {
+                        supportedBlocks++;
+                    }
+                }
+            }
+        }
+
+        return supportedBlocks >= totalBlocks / 2;
+    }
+
+    // Getters
+    public int getWidth() { return width; }
+    public int getHeight() { return height; }
+    public int getUsedSpace() { return usedSpace; }
+    public int getCurrentWeight() { return currentWeight; }
+    public int getMaxCapacity() { return MAX_CAPACITY; }
+    public List<Package> getPackages() { return packages; }
+    public boolean isEmpty() { return packages.isEmpty(); }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("+").append("-".repeat(width)).append("+\n");
+        for (char[] row : grid) {
+            sb.append("|").append(new String(row)).append("|\n");
+        }
+        sb.append("+").append("-".repeat(width)).append("+");
+        return sb.toString();
+    }
+}
