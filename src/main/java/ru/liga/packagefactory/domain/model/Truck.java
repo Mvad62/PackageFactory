@@ -1,4 +1,4 @@
-package main.java.ru.liga.packagefactory.domain.model;
+package ru.liga.packagefactory.domain.model;
 
 import java.util.ArrayList;
 import java.util.List;

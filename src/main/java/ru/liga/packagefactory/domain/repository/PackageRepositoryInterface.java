@@ -1,6 +1,6 @@
-package main.java.ru.liga.packagefactory.domain.repository;
+package ru.liga.packagefactory.domain.repository;
 
-import main.java.ru.liga.packagefactory.domain.model.Package;
+import ru.liga.packagefactory.domain.model.Package;
 import java.io.IOException;
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package main.java.ru.liga.packagefactory.domain.repository;
+package ru.liga.packagefactory.domain.repository;
 
 // PackageRepository.java - репозиторий для работы с посылками
 import java.io.IOException;
@@ -7,7 +7,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-import main.java.ru.liga.packagefactory.domain.model.Package;
+import ru.liga.packagefactory.domain.model.Package;
 
 public class PackageRepository implements PackageRepositoryInterface {
 

@@ -1,7 +1,7 @@
-package main.java.ru.liga.packagefactory.domain.service;
+package ru.liga.packagefactory.domain.service;
 
-import main.java.ru.liga.packagefactory.domain.model.Truck;
-import main.java.ru.liga.packagefactory.domain.model.Package;
+import ru.liga.packagefactory.domain.model.Truck;
+import ru.liga.packagefactory.domain.model.Package;
 
 import java.util.ArrayList;
 import java.util.Comparator;

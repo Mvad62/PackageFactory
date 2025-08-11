@@ -1,4 +1,4 @@
-package main.java.ru.liga.packagefactory.domain.model;
+package ru.liga.packagefactory.domain.model;
 
 import java.util.List;
 import java.util.Objects;
