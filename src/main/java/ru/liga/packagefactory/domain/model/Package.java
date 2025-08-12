@@ -1,5 +1,6 @@
 package ru.liga.packagefactory.domain.model;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
@@ -100,7 +101,8 @@ public class Package {
 
     // Getters
     public String getId() { return id; }
-    public List<String> getSlices() { return slices; }
+    public List<String> getSlices() { return Collections.unmodifiableList(slices);
+    }
     public int getMaxWidth() { return maxWidth; }
     public int getHeight() { return height; }
     public int getWeight() { return weight; }

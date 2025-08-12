@@ -22,7 +22,7 @@ public class PackageRepository implements PackageRepositoryInterface {
 
             if (trimmedLine.isEmpty()) {
                 if (!currentPackageLines.isEmpty()) {
-                    packages.add(createPackage(currentPackageLines));
+                    packages.add(createPackage(new ArrayList<>(currentPackageLines)));
                     currentPackageLines.clear();
                 }
             } else {

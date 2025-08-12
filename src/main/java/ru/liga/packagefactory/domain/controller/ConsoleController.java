@@ -19,7 +19,7 @@ public class ConsoleController {
 
     private final PackageLoadingService loadingService;
     private final PackageRepository repository;
-    private final Pattern IMPORT_COMMAND_PATTERN = Pattern.compile("import (.+\\.csv)");
+    private final Pattern IMPORT_COMMAND_PATTERN = Pattern.compile("import (.+\\.txt)");
 
     public void listen() {
         var scanner = new Scanner(System.in);
@@ -41,6 +41,14 @@ public class ConsoleController {
                     List<Package> packages = repository.loadPackagesFromFile(filePath);
 
                     System.out.println("Simple packing (one package per truck):");
+                    for (Package pkg : packages) {
+                        System.out.println(pkg.getId());
+                        List<String> s = pkg.getSlices();
+                        for (String slice : s) {
+                            System.out.println(slice);
+                        }
+                    }
+
                     List<Truck> simpleTrucks = loadingService.simplePack(packages);
                     loadingService.printTrucks(simpleTrucks);
 
