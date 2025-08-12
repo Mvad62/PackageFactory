@@ -81,12 +81,18 @@ public class Package {
 
         for (int y = 0; y < slices.size(); y++) {
             String slice = slices.get(y);
+            double sliceMoment = 0;
+            int sliceWeight = 0;
+
             for (int x = 0; x < slice.length(); x++) {
                 if (slice.charAt(x) != ' ') {
-                    totalMoment += x + 0.5; // Центр блока
-                    totalWeight++;
+                    sliceMoment += x + 0.5; // Центр блока (x + 0.5 для середины символа)
+                    sliceWeight++;
                 }
             }
+
+            totalMoment += sliceMoment;
+            totalWeight += sliceWeight;
         }
 
         return totalWeight == 0 ? 0 : totalMoment / totalWeight;

@@ -49,6 +49,8 @@ class PackageLoadingServiceTest {
         assertThat(trucks.getFirst().getCurrentWeight())
                 .as("Общий вес посылок в грузовике")
                 .isEqualTo(31);
+
+        service.printTrucks(trucks);
     }
 
     @Test

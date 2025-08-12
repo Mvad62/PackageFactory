@@ -18,7 +18,7 @@ public class PackageRepository implements PackageRepositoryInterface {
         List<String> currentPackageLines = new ArrayList<>();
 
         for (String line : lines) {
-            String trimmedLine = line.trim();
+            String trimmedLine = line.stripTrailing();
 
             if (trimmedLine.isEmpty()) {
                 if (!currentPackageLines.isEmpty()) {

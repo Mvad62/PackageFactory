@@ -1,5 +1,6 @@
 package ru.liga.packagefactory.domain.service;
 
+import lombok.extern.slf4j.Slf4j;
 import ru.liga.packagefactory.domain.model.Truck;
 import ru.liga.packagefactory.domain.model.Package;
 
@@ -7,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@Slf4j
 public class PackageLoadingService {
     private static final int TRUCK_WIDTH = 6;
     private static final int TRUCK_HEIGHT = 6;
@@ -34,22 +36,26 @@ public class PackageLoadingService {
         // Сортируем по убыванию площади (ширина*высота), затем по весу
         List<Package> sortedPackages = new ArrayList<>(packages);
         sortedPackages.sort(Comparator
-                .comparingInt((Package p) -> p.getMaxWidth() * p.getHeight()).reversed()
-                .thenComparingInt(Package::getWeight).reversed()
+                .comparingInt((Package p) -> p.getMaxWidth() * p.getHeight())
+                .reversed()
+                .thenComparing(Comparator.comparingInt(Package::getWeight).reversed())
         );
 
         Truck currentTruck = new Truck(TRUCK_WIDTH, TRUCK_HEIGHT);
 
         for (Package pkg : sortedPackages) {
             boolean placed = tryPlaceInExistingTrucks(trucks, pkg);
+            log.debug("Посылка {} {}", pkg.getId(), placed);
 
             if (!placed) {
                 placed = tryPlaceInCurrentTruck(currentTruck, pkg);
+                log.debug("Посылка {} {}", pkg.getId(), placed);
 
                 if (!placed) {
                     trucks.add(currentTruck);
                     currentTruck = new Truck(TRUCK_WIDTH, TRUCK_HEIGHT);
                     placed = tryPlaceInCurrentTruck(currentTruck, pkg);
+                    log.debug("Посылка {} {}", pkg.getId(), placed);
 
                     if (!placed) {
                         System.err.printf("Error: Package %s (size %dx%d) is too large for empty truck%n",

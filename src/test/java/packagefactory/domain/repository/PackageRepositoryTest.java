@@ -39,7 +39,7 @@ public class PackageRepositoryTest {
         assertThat(pkg1.getHeight()).isEqualTo(3);
         assertThat(pkg1.getMaxWidth()).isEqualTo(4);
         assertThat(pkg1.getWeight()).isEqualTo(8);
-        assertThat(pkg1.getCenterOfMassX()).isCloseTo(1.57, within(0.01));
+        assertThat(pkg1.getCenterOfMassX()).isCloseTo(2.25, within(0.01));
 
         Package pkg2 = packages.get(1);
         assertThat(pkg2.getHeight()).isEqualTo(3);
@@ -48,7 +48,7 @@ public class PackageRepositoryTest {
 
         Package pkg3 = packages.get(2);
         assertThat(pkg3.getHeight()).isEqualTo(2);
-        assertThat(pkg3.getMaxWidth()).isEqualTo(2);
+        assertThat(pkg3.getMaxWidth()).isEqualTo(3);
         assertThat(pkg3.getWeight()).isEqualTo(4);
 
         Files.delete(testFile);
