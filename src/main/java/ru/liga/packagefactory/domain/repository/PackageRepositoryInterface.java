@@ -6,4 +6,5 @@ import java.util.List;
 
 public interface PackageRepositoryInterface {
     List<Package> loadPackagesFromFile(String filePath) throws IOException;
+    List<Package> loadPackagesFromJSONFile(String filePath) throws IOException;
 }

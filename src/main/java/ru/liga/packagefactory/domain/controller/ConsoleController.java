@@ -8,6 +8,9 @@ import ru.liga.packagefactory.domain.repository.PackageRepository;
 import ru.liga.packagefactory.domain.service.PackageLoadingService;
 
 import java.io.IOException;
+import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Scanner;
 import java.util.regex.Matcher;
@@ -19,6 +22,7 @@ public class ConsoleController {
 
     private final PackageLoadingService loadingService;
     private final PackageRepository repository;
+    private final JsonValidator validator;
     private final Pattern IMPORT_COMMAND_PATTERN = Pattern.compile("import (.+\\.txt)");
 
     public void listen() {
@@ -35,10 +39,17 @@ public class ConsoleController {
             if (matcher.matches()) {
                 String filePath = matcher.group(1);
                 try {
-                    //PackageRepository repository = new PackageRepository();
-                    //PackageLoadingService loadingService = new PackageLoadingService();
+                    List<Package> packages;
+                    String content = Files.readString(Paths.get(filePath));
+                    // Загрузка схемы из ресурсов
+                    InputStream schemaStream = getClass().getResourceAsStream("/schemas/packages-schema.json");
 
-                    List<Package> packages = repository.loadPackagesFromFile(filePath);
+                    if (validator.validatePackagesJson(content, schemaStream)) {
+                        packages = repository.loadPackagesFromJSONFile(filePath);
+                    }
+                    else {
+                        packages = repository.loadPackagesFromFile(filePath);
+                    }
 
                     System.out.println("Simple packing (one package per truck):");
                     for (Package pkg : packages) {

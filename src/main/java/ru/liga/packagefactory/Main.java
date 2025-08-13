@@ -1,5 +1,6 @@
 package ru.liga.packagefactory;
 
+import ru.liga.packagefactory.domain.controller.JsonValidator;
 import ru.liga.packagefactory.domain.repository.PackageRepository;
 import ru.liga.packagefactory.domain.service.PackageLoadingService;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +15,8 @@ public class Main {
 
     private static void start() {
         ConsoleController consoleController = new ConsoleController(new PackageLoadingService(),
-                                                                    new PackageRepository());
+                                                                    new PackageRepository(),
+                                                                    new JsonValidator());
         consoleController.listen();
     }
 
