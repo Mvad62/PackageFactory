@@ -1,0 +1,32 @@
+{
+  "loadedTrucksCount" : 2,
+  "loadedTrucks" : [ {
+    "truckId" : "TRUCK-001",
+    "width" : 6,
+    "height" : 6,
+    "capacity" : 36,
+    "getUsedSpace" : 6,
+    "packages" : [ {
+      "id" : "2",
+      "weight" : 6,
+      "position" : {
+        "x" : 0,
+        "y" : 0
+      }
+    } ]
+  }, {
+    "truckId" : "TRUCK-002",
+    "width" : 6,
+    "height" : 6,
+    "capacity" : 36,
+    "getUsedSpace" : 5,
+    "packages" : [ {
+      "id" : "3",
+      "weight" : 5,
+      "position" : {
+        "x" : 0,
+        "y" : 0
+      }
+    } ]
+  } ]
+}

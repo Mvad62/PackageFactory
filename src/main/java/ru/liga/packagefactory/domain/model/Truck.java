@@ -1,26 +1,39 @@
 package ru.liga.packagefactory.domain.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import java.util.*;
 
 // Truck.java - класс кузова машины
 public class Truck {
+    private final String id;
     private final int width;
     private final int height;
     private final char[][] grid;
     private final List<Package> packages;
     private int usedSpace = 0;
     private int currentWeight = 0;
+    private final Map<String, TruckExportData.Position> packagePositions = new HashMap<>();
 
     public static final int DEFAULT_WIDTH = 6;
     public static final int DEFAULT_HEIGHT = 6;
     public static final int MAX_CAPACITY = DEFAULT_WIDTH * DEFAULT_HEIGHT;
 
-    public Truck() {
-        this(DEFAULT_WIDTH, DEFAULT_HEIGHT);
+    public Truck (String id){
+        super();
+        this.id = id;
+        this.width = DEFAULT_WIDTH;
+        this.height = DEFAULT_HEIGHT;
+        this.grid = new char[height][width];
+        this.packages = new ArrayList<>();
+        initializeGrid();
     }
 
-    public Truck(int width, int height) {
+    @JsonCreator
+    public Truck(@JsonProperty("id") String id,
+                 @JsonProperty("width") int width,
+                 @JsonProperty("height") int height) {
+        this.id = id;
         this.width = width;
         this.height = height;
         this.grid = new char[height][width];
@@ -72,6 +85,7 @@ public class Truck {
         packages.add(pkg);
         usedSpace += pkg.getWeight();
         currentWeight += pkg.getWeight();
+        this.packagePositions.put(pkg.getId(), new TruckExportData.Position(x, y));
         return true;
     }
 
@@ -109,7 +123,30 @@ public class Truck {
         return supportedBlocks >= totalBlocks / 2;
     }
 
+    public Truck copy() {
+        Truck copy = new Truck(this.id, this.width, this.height);
+        copy.packages.addAll(this.packages);
+        copy.currentWeight = this.currentWeight;
+        return copy;
+    }
+
+    public void clearTrack() {
+        this.usedSpace = 0;
+        this.currentWeight = 0;
+        this.packagePositions.clear();
+        initializeGrid();
+    }
+
+    public boolean hasPackagePositions() {
+        return !packagePositions.isEmpty();
+    }
+
+    public Map<String, TruckExportData.Position> getPackagePositions() {
+        return Collections.unmodifiableMap(packagePositions);
+    }
+
     // Getters
+    public String getId() {return id; }
     public int getWidth() { return width; }
     public int getHeight() { return height; }
     public int getUsedSpace() { return usedSpace; }

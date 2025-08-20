@@ -1,5 +1,8 @@
 package ru.liga.packagefactory.domain.model;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
@@ -8,23 +11,21 @@ import java.util.Objects;
 public class Package {
     private final String id;
     private final List<String> slices;
-    private final int maxWidth;
     private final int height;
     private final int weight;
-    private final double centerOfMassX;
 
-    public Package(String id, List<String> slices) {
+    @JsonCreator
+    public Package(@JsonProperty("id") String id,
+                   @JsonProperty("slices") List<String> slices) {
         this.id = Objects.requireNonNull(id);
         this.slices = validateSlices(slices);
         this.height = this.slices.size();
-        this.maxWidth = calculateMaxWidth();
         this.weight = calculateWeight();
-        this.centerOfMassX = calculateCenterOfMassX();
     }
 
     private List<String> validateSlices(List<String> slices) {
         if (slices == null || slices.isEmpty()) {
-            throw new IllegalArgumentException("Package slices cannot be empty");
+            throw new IllegalArgumentException("Слой посылки не может быть пустым");
         }
 
         // Проверяем, что все символы в слоях одинаковые (кроме пробелов)
@@ -34,7 +35,7 @@ public class Package {
             for (int i = 0; i < slice.length(); i++) {
                 char c = slice.charAt(i);
                 if (c != ' ' && c != firstChar) {
-                    throw new IllegalArgumentException("All non-space characters in package must be the same");
+                    throw new IllegalArgumentException("Все символы посылки должны быть одинаковы");
                 }
             }
         }
@@ -50,7 +51,7 @@ public class Package {
                 }
             }
         }
-        throw new IllegalArgumentException("Package contains only spaces");
+        throw new IllegalArgumentException("Посылка не содержит символов");
     }
 
     public int calculateMaxWidth() {
@@ -76,38 +77,25 @@ public class Package {
                 .sum();
     }
 
-    private double calculateCenterOfMassX() {
-        double totalMoment = 0;
-        int totalWeight = 0;
-
-        for (int y = 0; y < slices.size(); y++) {
-            String slice = slices.get(y);
-            double sliceMoment = 0;
-            int sliceWeight = 0;
-
-            for (int x = 0; x < slice.length(); x++) {
-                if (slice.charAt(x) != ' ') {
-                    sliceMoment += x + 0.5; // Центр блока (x + 0.5 для середины символа)
-                    sliceWeight++;
-                }
-            }
-
-            totalMoment += sliceMoment;
-            totalWeight += sliceWeight;
-        }
-
-        return totalWeight == 0 ? 0 : totalMoment / totalWeight;
-    }
-
     // Getters
-    public String getId() { return id; }
-    public List<String> getSlices() { return Collections.unmodifiableList(slices);
+    public String getId() {
+        return id;
     }
-    public int getMaxWidth() { return maxWidth; }
-    public int getHeight() { return height; }
-    public int getWeight() { return weight; }
-    public double getCenterOfMassX() { return centerOfMassX; }
-    public char getSymbol() { return findFirstNonSpaceChar(slices); }
+    public List<String> getSlices() {
+        return Collections.unmodifiableList(slices);
+    }
+    public int getMaxWidth() {
+        return calculateMaxWidth();
+    }
+    public int getHeight() {
+        return height;
+    }
+    public int getWeight() {
+        return weight;
+    }
+    public char getSymbol() {
+        return findFirstNonSpaceChar(slices);
+    }
 
     public String getSlice(int y) {
         return y < height ? slices.get(y) : "";

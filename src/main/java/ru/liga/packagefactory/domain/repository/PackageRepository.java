@@ -2,8 +2,10 @@ package ru.liga.packagefactory.domain.repository;
 
 // PackageRepository.java - репозиторий для работы с посылками
 
+import ru.liga.packagefactory.domain.model.InputData;
 import ru.liga.packagefactory.domain.model.Package;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -15,6 +17,11 @@ import com.fasterxml.jackson.core.type.TypeReference;
 
 public class PackageRepository implements PackageRepositoryInterface {
     private static final ObjectMapper objectMapper = new ObjectMapper();
+
+    public InputData loadInputData(String filePath) throws IOException {
+        // Десериализация
+        return objectMapper.readValue(new File(filePath), InputData.class);
+    }
 
     @Override
     public List<Package> loadPackagesFromFile(String filePath) throws IOException {

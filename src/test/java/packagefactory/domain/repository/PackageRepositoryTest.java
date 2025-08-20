@@ -8,7 +8,6 @@ import java.nio.file.Path;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.within;
 
 public class PackageRepositoryTest {
     @Test
@@ -39,7 +38,6 @@ public class PackageRepositoryTest {
         assertThat(pkg1.getHeight()).isEqualTo(3);
         assertThat(pkg1.getMaxWidth()).isEqualTo(4);
         assertThat(pkg1.getWeight()).isEqualTo(8);
-        assertThat(pkg1.getCenterOfMassX()).isCloseTo(2.25, within(0.01));
 
         Package pkg2 = packages.get(1);
         assertThat(pkg2.getHeight()).isEqualTo(3);
